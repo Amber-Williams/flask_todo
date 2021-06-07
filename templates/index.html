@@ -5,6 +5,39 @@
 {% endblock %}
 
 {% block body %}
-    <h1>la la la</h1>
+    <div class="content">
+        <h1>Todo list</h1>
+
+        {% if tasks|length < 1 %}
+            <h4>No tasks</h4>
+        {% else %}
+            <div class="list-titles">
+                <div>Complete</div>
+                <div>Task</div>
+                <div>Added</div>
+                <div>Actions</div>
+            </div>
+
+            <div class="list-items">
+                {% for task in tasks %}
+                <div> 
+                    <a href="/list/{{ task.id }}/edit-complete" >{{ task.complete }} </a>
+                </div>
+                <div> {{ task.content }} </div>
+                <div> {{ task.date_created.date() }} </div>
+                <div>
+                    <a href="/list/{{ task.id }}/delete" >delete</a>
+                    <a  href="/list/{{ task.id }}/edit-content">edit</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="/list" method="POST">
+            <input type="text" name="content" id="content">
+            <input type="submit" value="Add task">
+        </form>
+
+    </div>
 {% endblock %}
 
