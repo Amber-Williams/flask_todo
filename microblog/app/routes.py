@@ -44,8 +44,7 @@ def login():
 
     print('form.username.data', form.username.data)
 
-    flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
+    flash(f'Login requested for user {form.username.data}, remember_me={form.remember_me.data}')
 
     # take form data and put it into session
     content = generate_index_content(username)
