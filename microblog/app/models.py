@@ -1,17 +1,24 @@
 from datetime import datetime
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic') # Note 1: model starts with cap letter in db.relationship
-    # Note 3: ^ For a one-to-many relationship, a db.relationship field is normally defined on the "one" side, and is used as a convenient way to get access to the "many". 
-    # Note 4: backref will add a post.author expression that will return the user given a post.
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
-    # Note 2: The __repr__ method tells Python how to print objects of this class
+    def check_password(self, password):
+        if self.password_hash is None:
+            return False
+        return check_password_hash(self.password_hash, password)
+
     def __repr__(self):
         return f'<User - id: {self.id}, Username: {self.username}, email: {self.email}>'
 

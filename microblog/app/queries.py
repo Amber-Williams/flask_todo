@@ -1,16 +1,23 @@
-from app import app, db
+from app import app, db, login
 from app.models import User, Post
 
 class UserQuery():
+    @login.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
     def get_all():
         return User.query.all()
     
-    def get_one(id):
-        return User.query.get(id)
+    def get_one(username=None, email=None):
+        if username is None and email:
+            return User.query.filter_by(email=email).first()
+        return User.query.filter_by(username=username).first()
     
-    def add(username, email):
-        u = User(username, email)
-        db.session.add(u)
+    def add(username, email, password):
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
         db.session.commit()
 
 class PostQuery():
@@ -20,13 +27,12 @@ class PostQuery():
     def get_one(id):
         return Post.query.get(id)
     
-    def add(body, author_id):
-        # author must be type of user!
-        u = User.query.get(author_id)
-        p = Post(body=body, author=u)
-        db.session.add(p)
+    def add(body, author_name):
+        user = UserQuery.get_one(author_name)
+        post = Post(body=body, author=user)
+        db.session.add(post)
         db.session.commit()
 
-    def get_user_posts(user_id):
-        user = get_user(user_id)
+    def get_author_posts(author_name):
+        user = UserQuery.get_one(author_name)
         return user.posts.all()

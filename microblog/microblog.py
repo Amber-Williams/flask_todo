@@ -15,5 +15,5 @@ def make_shell_context():
         'add_post': PostQuery.add,
         'get_post': PostQuery.get_one,
         'get_posts': PostQuery.get_all,
-        'get_user_posts': PostQuery.get_user_posts
+        'get_user_posts': PostQuery.get_author_posts
         }
