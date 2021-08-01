@@ -3,7 +3,6 @@ from flask import render_template, request, session, flash, url_for, redirect
 from app import app
 from app.forms import LoginForm
 
-
 def generate_index_content(username):
     username = {'username': username}
     posts = [
@@ -23,8 +22,8 @@ def generate_index_content(username):
 @app.route('/index')
 def index_page():
     # check if contenet in session else user needs to login first
-    if 'content' in session:
-        content = session['content']
+    if 'username' in session:
+        content = generate_index_content(session['username'])
     else:
         return redirect(url_for('login_page'))
 
@@ -46,8 +45,7 @@ def login():
 
     flash(f'Login requested for user {form.username.data}, remember_me={form.remember_me.data}')
 
-    # take form data and put it into session
-    content = generate_index_content(username)
-    session['content'] = content
+    # take form data and put needed parts into session
+    session['username'] = username
     
     return redirect(url_for('index_page'))

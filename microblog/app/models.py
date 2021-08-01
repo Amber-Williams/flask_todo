@@ -22,4 +22,4 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Note 1: model should be snake case when used in db.Foreignkey
 
     def __repr__(self):
-        return f'<Post - id: {self.id}, user_id: {self.user.id}, body: {self.body} >'
+        return f'<Post - id: {self.id}, user_id: {self.user_id}, body: {self.body} >'
