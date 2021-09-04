@@ -10,3 +10,6 @@ test.db
 
 .env
 *.db
+
+# error logs
+*/logs
