@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app import app, db, login
 from app.models import User, Post
 
@@ -17,6 +19,17 @@ class UserQuery():
     def add(username, email, password):
         user = User(username=username, email=email)
         user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+    
+    def update_last_seen(user):
+        user.last_seen = datetime.utcnow()
+        db.session.add(user)
+        db.session.commit()
+    
+    def update_about_me(user, username, about_me):
+        user.username = username
+        user.about_me = about_me
         db.session.add(user)
         db.session.commit()
 
