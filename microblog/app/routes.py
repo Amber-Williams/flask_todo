@@ -5,6 +5,7 @@ from werkzeug.urls import url_parse
 from app import app
 from app.forms import LoginForm, RegistrationForm
 from app.queries import UserQuery
+from app.models import User
 
 posts = [
     {
@@ -76,3 +77,13 @@ def register():
 
     # GET request
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
